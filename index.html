@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>З Днем Народження, Матусю! ❤️️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background: #0f1016;
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 430px;
+      height: 100%;
+      max-height: 932px;
+      background: radial-gradient(circle at 50% 20%, #2d122d 0%, #150d1e 50%, #0a0710 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .stories-header {
+      padding: 16px 16px 8px;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff758c, #ff7eb3);
+      transition: width 0.25s ease;
+    }
+
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge-counter {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .music-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .deck-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 16px;
+    }
+
+    .card {
+      position: absolute;
+      width: 86vw;
+      max-width: 340px;
+      height: 62vh;
+      max-height: 480px;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 12px 12px 18px 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.35s ease-out, opacity 0.25s ease;
+      will-change: transform, opacity;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+    }
+
+    .card-photo-box {
+      width: 100%;
+      flex: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #111;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .card-footer {
+      padding-top: 12px;
+      text-align: center;
+      color: #2b2b2b;
+    }
+
+    .card-caption {
+      font-family: 'Caveat', cursive;
+      font-size: 21px;
+      line-height: 1.2;
+      color: #e63946;
+      font-weight: 700;
+    }
+
+    .card-date {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card.swipe-away {
+      animation: swipeOut 0.4s forwards ease-in;
+      pointer-events: none;
+    }
+
+    @keyframes swipeOut {
+      to {
+        transform: translate3d(120%, -20%, 0) rotate(20deg) scale(0.95);
+        opacity: 0;
+      }
+    }
+
+    .bottom-bar {
+      padding: 16px 20px 28px;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tap-hint {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .main-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(135deg, #ff5e62, #ff9966);
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .main-btn:active {
+      transform: scale(0.97);
+    }
+
+    .main-btn.final-btn {
+      background: linear-gradient(135deg, #f72585, #ff758c);
+    }
+
+    .finale-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #2e0828 0%, #0d020d 100%);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .finale-screen.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .big-heart {
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+
+    .finale-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #ff758c, #ff7eb3, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .finale-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #fce4ec;
+      margin-bottom: 30px;
+      max-width: 320px;
+    }
+
+    .restart-btn {
+      padding: 12px 28px;
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="bgSong" src="music.mp3" loop preload="auto"></audio>
+
+  <div class="app-viewport">
+    <div class="stories-header">
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="header-actions">
+        <div class="badge-counter" id="counterBadge">1 / 35</div>
+        <button class="music-btn" id="musicToggle" title="Музика">🎵</button>
+      </div>
+    </div>
+
+    <div class="deck-container" id="deckContainer"></div>
+
+    <div class="bottom-bar">
+      <div class="tap-hint">Натисни або торкнись фото 👆</div>
+      <button class="main-btn" id="actionBtn">
+        <span>Гортати спогад</span> ➜
+      </button>
+    </div>
+
+    <div class="finale-screen" id="finaleScreen">
+      <div class="big-heart">💖</div>
+      <h1 class="finale-title">З Днем Народження, Мамо!</h1>
+      <p class="finale-text">
+        Дякую тобі за кожен день, за безмежну турботу, ніжність і найтепліші обійми у світі. 
+        Ти — наше найбільше серце і найяскравіше сонечко! Будь найщасливішою щомиті! ✨💐
+      </p>
+      <button class="restart-btn" id="restartBtn">Подивитися знову 🔄</button>
+    </div>
+  </div>
+
+  <script>
+    const stories = [
+      "Ніжна, красива і осяяна сонцем 🌅✨",
+      "Твої теплі очі й рідна посмішка 💕",
+      "Наша гордість і натхнення 🏛️🌸",
+      "Коли вся наша банда разом — свято! ☕🥰",
+      "Найтепліші розмови — тільки з тобою 🤍",
+      "Сонце, морський бриз і щасливі дні 🌊☀️",
+      "Розквітай щодня, як на відпочинку 🌺🍹",
+      "Хай приводів для радості буде море! 🥂✨",
+      "Погляд, сповнений безмежної любові 💫❤️",
+      "З тобою завжди весело і надійно! ✌️🎉",
+      "Морський вітер і твоя щира посмішка ⚓🌊",
+      "Назустріч новим враженням і мріям! 🛥️💙",
+      "Час для чудового і заслуженого релаксу 🏔️✨",
+      "Незабутні моменти щастя та спокою ☀️⛵",
+      "Чарівна й елегантна у світлі вогнів 🌙✨",
+      "День повного перезавантаження і радості 💦🌴",
+      "Твоя головна команда завжди поруч! ✌️🥰",
+      "Хай кожна стежка буде квітучою 🌿🕊️",
+      "Солодкі моменти для найкращої матусі ☕🍰",
+      "Цілую міцно! Ти наше безмежне серце ❤️💋",
+      "Найтепліший дім і найрідніші поруч 🎄❤️✨",
+      "Твої любові вистачить зігріти весь світ 👶🍼💕",
+      "Затишок і просто чудовий день ☕☀️",
+      "Найтепліша весна поруч із рідними 🌸🌿",
+      "Розквітай так само красиво і яскраво! 🌺🕊️️",
+      "У твоїх обіймах завжди найспокійніше 🛋️❤️",
+      "Наша головна опора у житті 🎓💚",
+      "Мама, яка щодня вкладає душу й любов 👩‍🏫✨",
+      "Твоя гордість — наша найкраща нагорода 💐🥰",
+      "Сім'я — це наше найбільше багатство 🌿🤍",
+      "Маленькі радощі та теплі літні дні 🌸👶☀️",
+      "Квітуча, витончена і прекрасна! 🌺🌿",
+      "Твоє тепло зігріває в будь-яку негоду ❄️✨",
+      "Справжнє диво і світло нашої сім'ї 🌟🎄",
+      "З днем народження, матусю! ❤️🎉"
+    ];
+
+    const total = 35;
+    let currentIndex = 0;
+    const deck = document.getElementById('deckContainer');
+    const actionBtn = document.getElementById('actionBtn');
+    const badge = document.getElementById('counterBadge');
+    const progress = document.getElementById('progressFill');
+    const finale = document.getElementById('finaleScreen');
+    const restartBtn = document.getElementById('restartBtn');
+    const song = document.getElementById('bgSong');
+    const musicBtn = document.getElementById('musicToggle');
+
+    let isPlaying = false;
+
+    function renderDeck() {
+      deck.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = `card-${i}`;
+        card.style.zIndex = total - i;
+
+        const rot = ((i % 5) - 2) * 1.5;
+        card.style.transform = `translate3d(0, 0, 0) scale(${1 - Math.min(i, 4) * 0.015}) rotate(${rot}deg)`;
+
+        const imgSrc = `${i + 1}.jpg`;
+        const imgFallback = `${i + 1}.JPG`;
+
+        card.innerHTML = `
+          <div class="card-photo-box">
+            <img class="card-photo" 
+                 src="${imgSrc}" 
+                 loading="${i < 4 ? 'eager' : 'lazy'}"
+                 onerror="this.onerror=null; this.src='${imgFallback}';" 
+                 alt="Спогад ${i + 1}">
+          </div>
+          <div class="card-footer">
+            <div class="card-caption">${stories[i]}</div>
+            <div class="card-date">Спогад №${i + 1}</div>
+          </div>
+        `;
+
+        card.addEventListener('click', nextCard);
+        deck.appendChild(card);
+      }
+      updateState();
+    }
+
+    function updateState() {
+      const currentNum = Math.min(currentIndex + 1, total);
+      badge.textContent = `${currentNum} / ${total}`;
+      progress.style.width = `${(currentNum / total) * 100}%`;
+
+      if (currentIndex === total - 1) {
+        actionBtn.innerHTML = `<span>Далі</span> ➜`;
+        actionBtn.classList.add('final-btn');
+      } else {
+        actionBtn.innerHTML = `<span>Гортати спогад</span> ➜`;
+        actionBtn.classList.remove('final-btn');
+      }
+    }
+
+    function toggleMusic() {
+      if (isPlaying) {
+        song.pause();
+        isPlaying = false;
+        musicBtn.textContent = '🔇';
+      } else {
+        song.play().then(() => {
+          isPlaying = true;
+          musicBtn.textContent = '🎵';
+        }).catch(() => {});
+      }
+    }
+
+    function startMusicOnce() {
+      if (!isPlaying) {
+        song.play().then(() => {
+          isPlaying = true;
+          musicBtn.textContent = '🎵';
+        }).catch(() => {});
+      }
+    }
+
+    musicBtn.addEventListener('click', toggleMusic);
+
+    function nextCard() {
+      startMusicOnce();
+
+      if (currentIndex < total - 1) {
+        const currentCard = document.getElementById(`card-${currentIndex}`);
+        if (currentCard) {
+          currentCard.classList.add('swipe-away');
+        }
+        currentIndex++;
+        updateState();
+      } else if (currentIndex === total - 1) {
+        showFinale();
+      }
+    }
+
+    actionBtn.addEventListener('click', nextCard);
+
+    function showFinale() {
+      finale.classList.add('show');
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#ff758c', '#ff7eb3', '#f72585', '#ffffff']
+      });
+    }
+
+    restartBtn.addEventListener('click', () => {
+      finale.classList.remove('show');
+      currentIndex = 0;
+      renderDeck();
+    });
+
+    renderDeck();
+  </script>
+</body>
+</html>
